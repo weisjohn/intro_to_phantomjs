@@ -1,8 +1,6 @@
 var page = require('webpage').create();
 page.open('http://github.com/', function(status) {
-    if (status !== "success") {
-        console.log("Couldn't open the page.");
-        return phantom.exit(1);
-    }
-    phantom.exit();
+    if (status == "success") return phantom.exit();
+    console.log("Couldn't open the page.");
+    phantom.exit(1);
 });
