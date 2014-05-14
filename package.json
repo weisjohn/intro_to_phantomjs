@@ -1,0 +1,25 @@
+{
+  "name": "intro_to_phantomjs",
+  "version": "0.0.0",
+  "description": "A collection of example scripts for PhantomJS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/weisjohn/intro_to_phantomjs.git"
+  },
+  "keywords": [
+    "phantomjs"
+  ],
+  "author": "John Weis <weis.john@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/weisjohn/intro_to_phantomjs/issues"
+  },
+  "homepage": "https://github.com/weisjohn/intro_to_phantomjs",
+  "dependencies": {
+    "phantomjs": "^1.9.7-5"
+  }
+}
