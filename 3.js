@@ -1,12 +1,21 @@
 var page = require('webpage').create();
 
-page.paperSize = {
-    format: 'A4',
-    orientation: 'portrait',
-    border: '1cm'
-}
+page.viewportSize = page.clipRect = { 
+    width: 1024, height: 768
+};
 
-page.open('http://github.com/', function() {
-    page.render('github.pdf');
+var name = 'github.explore.';
+name += ~~(Math.random() * 1e3) + '.png';
+
+page.open('http://github.com/explore', function() {
+    
+    // super idomatic
+    page.clipRect = page.evaluate(function() {
+        var selector = '.featured-grid'
+        var elem = document.querySelector(selector);
+        return elem.getBoundingClientRect();
+    });
+
+    page.render(name);
     phantom.exit();
 });
