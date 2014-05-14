@@ -1,12 +1,10 @@
 var page = require('webpage').create();
 
-page.paperSize = {
-    format: 'A4',
-    orientation: 'portrait',
-    border: '1cm'
-}
+page.viewportSize = page.clipRect = { 
+    width: 1024, height: 768
+};
 
 page.open('http://github.com/', function() {
-    page.render('github.pdf');
+    page.render('github.clip.png');
     phantom.exit();
 });
