@@ -1,4 +1,5 @@
 var exec = require('child_process').exec;
+var spawn = require('child_process').spawn;
 var fs = require('fs');
 var async = require('async');
 var there = "nodephantom", back = "phantomnode";
@@ -18,6 +19,52 @@ function mkfifos(cb) {
     async.parallel([ mkfifo(there), mkfifo(back) ], cb)
 }
 
+var done = false;
+function phantomjs() {
+    var phantom = spawn("phantomjs", [ "8.js" ]);
+    phantom.on('exit', terminate);
+}
+
+function terminate() {
+    console.log('terminate called')
+    done = true;
+    if (writer) writer.kill('SIGHUP');
+    if (reader) reader.kill('SIGHUP');
+}
+
+
+var writer, writeLines = [];
+function writeLine(msg) {
+    if (writer) return setTimeout(function() { writeLine(msg) }, 1e3);
+    _writeLine(msg);
+}
+
+function _writeLine(msg) {
+    console.log('writing')
+    writer = exec("echo " + msg + " > " + there, function(err) {
+        console.log('written')
+        writer = null;
+    });
+}
+
+
+var reader, readLines = [];
+function readLine() {
+    if (reader) return setTimeout(function() { readLine() }, 1e3);
+    _readLine();
+}
+
+function _readLine() {
+    console.log('reading')
+    reader = exec("tail -n 1 " + back, function(err, data) {
+        console.log('read', data);
+        reader = null;
+    });
+}
+
+
+
+
 function run(cmd) { return function(cb) {
     console.log("starting", cmd)
     console.time(cmd)
@@ -35,13 +82,13 @@ function start_writing() { return function(cb) {
     cb();
 } }
 
-function write(msg, cb) {
-    if (done) return cb("already closed");
-    run("ls " + there  + " && echo " + JSON.stringify(msg) + " > " + there)(function(err, stdout, stderr) {
-        if (err) console.log('error writing', err);
-        cb();
-    });
-}
+// function write(msg, cb) {
+//     if (done) return cb("already closed");
+//     run("ls " + there  + " && echo " + JSON.stringify(msg) + " > " + there)(function(err, stdout, stderr) {
+//         if (err) console.log('error writing', err);
+//         cb();
+//     });
+// }
 
 function run_and_read(cmd) { return function(cb) {
 
@@ -70,15 +117,22 @@ function run_and_read(cmd) { return function(cb) {
     });
 } }
 
-function read(data) {
-    console.log("node:" + data.toString());
-}
+// function read(data) {
+//     console.log("node:" + data.toString());
+// }
 
 // mkfifos(function(err) {
 //     console.log(err)
 //     if (err) console.log('mkfifos failed')
 // });
 
+phantomjs();
+
+
+setInterval(function() {
+    writeLine("foo");
+    readLine();
+}, 1e3)
 
 
 // async.waterfall([

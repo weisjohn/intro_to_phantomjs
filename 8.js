@@ -1,7 +1,13 @@
-var fs = require('fs');
-var stdin = fs.open('nodephantom', 'r');
 
-function out(data) { console.log("hello from phantom"); }
+
+var fs = require('fs');
+
+
+
+var stdin = fs.open('nodephantom', 'r');
+var stdout = fs.open('phantomnode', 'w');
+
+function out(data) { stdout.writeLine("hello from phantom\n"); }
 var closing = false;
 var writing = setInterval(function() {
     if (!closing) var line = stdin.readLine();
@@ -16,4 +22,7 @@ setTimeout(function() {
     closing = true;
     clearInterval(writing);
     phantom.exit(0); 
-}, 3e3);
+}, 2e3);
+
+
+// setTimeout(function() { phantom.exit(0); }, 1e3);
