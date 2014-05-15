@@ -5,17 +5,14 @@ var there = "nodephantom", back = "phantomnode";
 var done = false;
 
 function run(cmd) { return function(cb) {
-    // console.log('running ', cmd)
     exec(cmd, function(err, stdout, stdin) { cb(err); });
 } }
-
 
 function run_and_read(cmd) { return function(cb) {
     async.parallel([ function(cb) {
         async.until(function() { return done; }, function(cb) {
             var timeout = false;
             if (!done) fs.readFile(back, function(err, data) {
-                console.log("read", err, data.toString())
                 read(data);
                 if (!timeout) cb();
             });
@@ -42,7 +39,7 @@ function write(msg, cb) {
 }
 
 function read(data) {
-    console.log(data);
+    console.log(data.toString());
 }
 
 var writing = setInterval(function() {
@@ -53,14 +50,9 @@ var writing = setInterval(function() {
 async.waterfall([
     run("mkfifo " + there + " && mkfifo " + back),
     run_and_read("phantomjs 8.js >> " + back),
-    run("echo \\r\\n >> " + back),
-    run("echo \\r\\n >> " + back)
+    run("sleep 1 && echo \\n >> " + back),
+    run("echo \\n >> " + back)
 ], function(err) {
     run("rm " + there + " " + back)(function() {})
-
     clearInterval(writing);
-
-    // // console.log(process.reallyExit)
-    // return process.exit(err ? 1 : 0);
-    // console.log('after exit?')
 });
