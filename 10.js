@@ -13,12 +13,9 @@ function read() {
     catch (e) { throw new Error(data); }
 }
 
-function _read(data) {
-    if (Array.isArray(data)) data.forEach(_readLine);
-}
-
+function _read(data) { data.forEach(_readLine); }
 function _readLine(obj) {
-    if (obj.action !== "ack") return write({ action: "ack", obj: obj });
+    if (obj.action !== "ack") write({ action: "ack", obj: obj });
     // TODO: invoke routes here
 }
 

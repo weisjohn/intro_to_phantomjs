@@ -11,10 +11,7 @@ phantomjs.stderr.on('data', function(data) {
 phantomjs.on('exit', function() { console.log('done'); });
 
 var writeBuffer = [];
-function write(obj) { 
-    writeBuffer.push(JSON.stringify(obj));
-}
-
+function write(obj) {  writeBuffer.push(JSON.stringify(obj)); }
 function _write() {
     phantomjs.stdin.write(JSON.stringify(writeBuffer) + "\n");
     writeBuffer = [];
