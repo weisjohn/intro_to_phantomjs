@@ -46,7 +46,7 @@ function read(data) {
 }
 
 var writing = setInterval(function() {
-    write("hello from node", function() {})
+    if (!done) write("hello from node", function() {})
 }, 1e3);
 
 
@@ -57,6 +57,7 @@ async.waterfall([
     run("rm " + there + " " + back)
 ], function(err) {
     console.log('rm worked?')
-    clearInterval(writing)
+    clearInterval(writing);
+    // console.log(process.reallyExit)
     return process.exit(err ? 1 : 0);
 });
