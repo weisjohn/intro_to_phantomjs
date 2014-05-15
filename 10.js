@@ -1,28 +1,35 @@
+var stderr = require('system').stderr;
+var stdin = require('system').stdin;
 
+function write(obj) {
+    stderr.write(JSON.stringify(obj));
+    if (obj.action !== "ack") read();
+}
 
-var fs = require('fs');
+function read() {
+    var data = stdin.readLine();
+    try { _read(JSON.parse(data)); }
+    catch (e) { throw new Error(data); }
+}
 
+function _read(data) {
+    if (Array.isArray(data)) data.forEach(_readLine);
+}
 
-
-var stdin = fs.open('nodephantom', 'r');
-var stdout = fs.open('phantomnode', 'w');
-
-function out(data) { stdout.writeLine("hello from phantom\n"); }
-var closing = false;
-var writing = setInterval(function() {
-    if (!closing) var line = stdin.readLine();
-    console.log("phantom:", line);
-}, 1e3);
+function _readLine(obj) {
+    if (obj.action !== "ack") write({ action: "ack", obj: obj });
+}
 
 setInterval(function() {
-    out({ action: "render", value: "message" });
+    write({ action : "heartbeat" });
 }, 1e3);
 
-setTimeout(function() { 
-    closing = true;
-    clearInterval(writing);
-    phantom.exit(0); 
-}, 2e3);
-
-
-// setTimeout(function() { phantom.exit(0); }, 1e3);
+var page = require('webpage').create();
+page.open("http://github.com", function(status) {
+    if (status == "success") {
+        write({ action: "opened" });
+        page.render('github.jpg');
+        write({ action: "rendered" });
+    }
+    phantom.exit();
+});
