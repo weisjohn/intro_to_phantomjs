@@ -5,7 +5,7 @@ function out(data) { console.log("hello from phantom"); }
 var closing = false;
 var writing = setInterval(function() {
     if (!closing) var line = stdin.readLine();
-    console.log("from node", line);
+    console.log("phantom:", line);
 }, 1e3);
 
 setInterval(function() {
@@ -16,4 +16,4 @@ setTimeout(function() {
     closing = true;
     clearInterval(writing);
     phantom.exit(0); 
-}, 2e3);
+}, 3e3);
