@@ -18,7 +18,8 @@ function _read(data) {
 }
 
 function _readLine(obj) {
-    if (obj.action !== "ack") write({ action: "ack", obj: obj });
+    if (obj.action !== "ack") return write({ action: "ack", obj: obj });
+    // TODO: invoke routes here
 }
 
 setInterval(function() {

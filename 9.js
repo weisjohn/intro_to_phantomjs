@@ -12,7 +12,7 @@ phantomjs.on('exit', function() { console.log('done'); });
 
 var writeBuffer = [];
 function write(obj) { 
-    writeBuffer.push(JSON.stringify(obj)); 
+    writeBuffer.push(JSON.stringify(obj));
 }
 
 function _write() {
@@ -21,10 +21,16 @@ function _write() {
 }
 
 function read(obj) {
-    if (obj.action == "ack") 
+    if (obj.action == "ack")
         return console.log("phantom:", JSON.parse(obj.obj));
     
     write({ action: "ack" });
+    // TODO: invoke routes here
     console.log("node:", obj);
     _write();
 }
+
+// can't yet do this
+// setInterval(function() {
+//     write({ action : "heartbeat" });
+// }, 1e3);
