@@ -54,10 +54,13 @@ async.waterfall([
     run("mkfifo " + there + " && mkfifo " + back),
     run_and_read("phantomjs 8.js >> " + back),
     run("echo \\r\\n >> " + back),
-    run("rm " + there + " " + back)
+    run("echo \\r\\n >> " + back)
 ], function(err) {
-    console.log('rm worked?')
+    run("rm " + there + " " + back)(function() {})
+
     clearInterval(writing);
-    // console.log(process.reallyExit)
-    return process.exit(err ? 1 : 0);
+
+    // // console.log(process.reallyExit)
+    // return process.exit(err ? 1 : 0);
+    // console.log('after exit?')
 });
