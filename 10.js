@@ -4,7 +4,7 @@ var mrhyde = sleepyhollow();
 mrhyde.on('render', function(url) {
     var page = require('webpage').create();
     page.open(url, function(status) {
-        page.render(url + ".png");
+        page.render("sleepy.png");
         mrhyde.emit("rendered");
         page.close();
     });
