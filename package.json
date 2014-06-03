@@ -20,6 +20,8 @@
   },
   "homepage": "https://github.com/weisjohn/intro_to_phantomjs",
   "dependencies": {
-    "phantomjs": "^1.9.7-5"
+    "phantomjs": "^1.9.7-5",
+    "sleepyhollow-node": "^0.1.2",
+    "sleepyhollow-phantom": "^0.1.1"
   }
 }
